@@ -106,3 +106,28 @@
   width: 100%;
   height: 4rem;
 }
+
+.buttonWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+@keyframes tooltipFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.buttonWrapper:has(button:disabled):hover::after {
+  content: 'Veuillez entrer un message';
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: hsl(250deg 50% 20%);
+  color: white;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  padding: 4px 10px;
+  border-radius: 4px;
+  animation: tooltipFadeIn 150ms ease-out;
+}

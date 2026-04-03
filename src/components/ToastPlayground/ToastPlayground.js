@@ -79,7 +79,9 @@ function ToastPlayground() {
           <div
             className={`${styles.inputWrapper} ${styles.radioWrapper}`}
           >
-            <Button>Pop Toast!</Button>
+            <span className={styles.buttonWrapper}>
+              <Button disabled={message.trim() === ''}>Pop Toast!</Button>
+            </span>
           </div>
         </div>
       </form>
