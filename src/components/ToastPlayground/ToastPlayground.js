@@ -3,28 +3,27 @@ import React from 'react';
 import Button from '../Button';
 
 import styles from './ToastPlayground.module.css';
-import Toast from '../Toast';
+
 import ToastShelf from '../ToastShelf';
+import { ToastContext } from '../ToastProvider';
 
 const VARIANT_OPTIONS = ['notice', 'warning', 'success', 'error'];
 
 function ToastPlayground() {
+  const { addToast } = React.useContext(ToastContext);
 
   const [selectedVariant, setSelectedVariant] = React.useState(VARIANT_OPTIONS[0])
   const [message, setMessage] = React.useState('');
+  const messageRef = React.useRef(null);
 
-  const [toasts, setToasts] = React.useState([]);
-
-  const handleClick = () => {
-    setToasts((toasts) => [...toasts, {
-      variant: selectedVariant, isShowed: true, children: message, id: crypto.randomUUID()
-    }])
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    addToast(message, selectedVariant);
+    setMessage('');
+    setSelectedVariant(VARIANT_OPTIONS[0]);
+    messageRef.current.focus();
   };
 
-  const hideToast = (id) => {
-    const toastsToKeep = toasts.filter(t => t.id !== id)
-    setToasts(toastsToKeep);
-  }
   return (
     <div className={styles.wrapper}>
       <header>
@@ -32,7 +31,7 @@ function ToastPlayground() {
         <h1>Toast Playground</h1>
       </header>
 
-      <div className={styles.controlsWrapper}>
+      <form onSubmit={handleSubmit} className={styles.controlsWrapper}>
         <div className={styles.row}>
           <label
             htmlFor="message"
@@ -43,6 +42,7 @@ function ToastPlayground() {
           </label>
           <div className={styles.inputWrapper}>
             <textarea
+              ref={messageRef}
               id="message"
               className={styles.messageInput}
               value={message}
@@ -79,11 +79,11 @@ function ToastPlayground() {
           <div
             className={`${styles.inputWrapper} ${styles.radioWrapper}`}
           >
-            <Button onClick={handleClick}>Pop Toast!</Button>
+            <Button>Pop Toast!</Button>
           </div>
         </div>
-      </div>
-      <ToastShelf toasts={toasts} hideToast={hideToast}></ToastShelf>
+      </form>
+      <ToastShelf />
     </div>
   );
 }
